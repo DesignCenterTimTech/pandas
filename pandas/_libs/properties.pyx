@@ -5,45 +5,6 @@ from cpython.dict cimport (
 )
 from cython cimport Py_ssize_t
 
-
-cdef class CachedProperty:
-
-    cdef readonly:
-        object fget, name, __doc__
-
-    def __init__(self, fget):
-        self.fget = fget
-        self.name = fget.__name__
-        self.__doc__ = getattr(fget, '__doc__', None)
-
-    def __get__(self, obj, typ):
-        if obj is None:
-            # accessed on the class, not the instance
-            return self
-
-        # Get the cache or set a default one if needed
-        cache = getattr(obj, '_cache', None)
-        if cache is None:
-            try:
-                cache = obj._cache = {}
-            except (AttributeError):
-                return self
-
-        if PyDict_Contains(cache, self.name):
-            # not necessary to Py_INCREF
-            val = <object>PyDict_GetItem(cache, self.name)
-        else:
-            val = self.fget(obj)
-            PyDict_SetItem(cache, self.name, val)
-        return val
-
-    def __set__(self, obj, value):
-        raise AttributeError("Can't set attribute")
-
-
-cache_readonly = CachedProperty
-
-
 cdef class AxisProperty:
 
     cdef readonly:

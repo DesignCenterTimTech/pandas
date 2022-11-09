@@ -34,7 +34,7 @@ cnp.import_array()
 
 # TODO: formalize having _libs.properties "above" tslibs in the dependency structure
 
-from pandas._libs.properties import cache_readonly
+from pandas.util._decorators import cache_readonly
 
 from pandas._libs.tslibs cimport util
 from pandas._libs.tslibs.util cimport (
