@@ -31,6 +31,7 @@ from pandas._libs import (
     algos as libalgos,
     index as libindex,
     lib,
+    lib_pp,
 )
 import pandas._libs.join as libjoin
 from pandas._libs.lib import (
@@ -2749,7 +2750,7 @@ class Index(IndexOpsMixin, PandasObject):
         """
         Return a string of the type inferred from the values.
         """
-        return lib.infer_dtype(self._values, skipna=False)
+        return lib_pp.infer_dtype(self._values, skipna=False)
 
     @cache_readonly
     @final

@@ -1,0 +1,30 @@
+"""
+Benchmarks for code in pandas/_libs, excluding pandas/_libs/tslibs,
+which has its own directory.
+
+If a PR does not edit anything in _libs/, then it is unlikely that the
+benchmarks will be affected.
+"""
+try:
+    from pandas.util import cache_readonly
+except ImportError:
+    from pandas.util._decorators import cache_readonly
+
+
+class CacheReadonly:
+    def setup(self):
+        class Foo:
+            @cache_readonly
+            def prop(self):
+                return 5
+
+        self.obj = Foo()
+
+    def time_cache_readonly(self):
+        self.obj.prop
+
+import pyperf
+r = pyperf.Runner()
+c = CacheReadonly()
+c.setup()
+r.bench_func('time_cache_readonly', c.time_cache_readonly)
